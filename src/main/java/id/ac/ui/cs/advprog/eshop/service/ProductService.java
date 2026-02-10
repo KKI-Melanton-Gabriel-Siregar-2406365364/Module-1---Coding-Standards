@@ -6,4 +6,7 @@ import java.util.List;
 public interface ProductService {
     public Product create(Product product);
     public List<Product> findAll();
+    Product findById(String productId);
+    void update(Product product); // "edit" in repo, usually "update" in service
+    void deleteProductById(String productId);
 }
