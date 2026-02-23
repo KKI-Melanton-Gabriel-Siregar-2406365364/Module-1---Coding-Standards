@@ -141,4 +141,36 @@ class ProductRepositoryTest {
         Iterator<Product> productIterator = productRepository.findAll();
         assertTrue(productIterator.hasNext()); // Should still contain the original product
     }
+
+    @Test
+    void testCreateProductWithoutId() {
+        // Arrange
+        Product product = new Product();
+        product.setProductName("Sampo Cap Kuda");
+        product.setProductQuantity(20);
+        // Notice we are NOT setting the ID here
+
+        // Act
+        Product savedProduct = productRepository.create(product);
+
+        // Assert
+        assertNotNull(savedProduct.getProductId()); // This verifies the UUID was generated!
+        assertEquals("Sampo Cap Kuda", savedProduct.getProductName());
+    }
+
+    @Test
+    void testFindByIdNotFound() {
+        // Arrange
+        Product product = new Product();
+        product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        product.setProductName("Sampo Cap Bambang");
+        product.setProductQuantity(100);
+        productRepository.create(product);
+
+        // Act
+        Product result = productRepository.findById("some-random-id-that-does-not-exist");
+
+        // Assert
+        assertNull(result); // This verifies the loop finishes and returns null
+    }
 }
