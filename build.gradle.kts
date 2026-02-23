@@ -1,6 +1,7 @@
 plugins {
     java
-    id("org.springframework.boot") version "3.2.2" // Note: 4.0.2 doesn't exist yet, assumed 3.2.x or kept your version if it works locally
+    jacoco
+    id("org.springframework.boot") version "3.2.2"
     id("io.spring.dependency-management") version "1.1.7"
 }
 
@@ -51,6 +52,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
 }
 
+// Keep your custom tasks if you need them for other purposes
 tasks.register<Test>("unitTest") {
     description = "Runs unit tests."
     group = "verification"
@@ -72,6 +74,26 @@ tasks.register<Test>("functionalTest") {
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
 }
+
+// --- ADDED FOR CI/CD TUTORIAL ---
+
+// Modifies the built-in test task provided by the java Gradle plugin [cite: 30]
+tasks.test {
+    filter {
+        // Exclude the functional tests from being run by the test task [cite: 29]
+        excludeTestsMatching("*FunctionalTest")
+    }
+    // Ensure the code coverage report generation is always generated after running the test task [cite: 31]
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+// Configure the JaCoCo report generation
+tasks.jacocoTestReport {
+    // Tell the jacocoTestReport task to run after the test task [cite: 32]
+    dependsOn(tasks.test)
+}
+
+// --------------------------------
 
 // --- CRITICAL FIX: FORCE JUNIT VERSIONS ---
 configurations.all {
