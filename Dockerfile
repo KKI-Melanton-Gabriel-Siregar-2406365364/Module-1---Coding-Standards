@@ -1,23 +1,23 @@
-# Stage 1: Build the application using Gradle
-FROM eclipse-temurin:21-jdk-alpine AS builder
-WORKDIR /app
+FROM docker.io/library/eclipse-temurin:21-jdk-alpine AS builder
 
-# Copy all project files into the Docker container
+WORKDIR /src/advshop
 COPY . .
+RUN ./gradlew clean bootJar
 
-# Grant execution rights to the Gradle wrapper and build the app
-RUN chmod +x ./gradlew
-RUN ./gradlew clean bootJar --no-daemon
+FROM docker.io/library/eclipse-temurin:21-jre-alpine AS runner
 
-# Stage 2: Run the built application
-FROM eclipse-temurin:21-jre-alpine
-WORKDIR /app
+ARG USER_NAME=advshop
+ARG USER_UID=1000
+ARG USER_GID=${USER_UID}
 
-# Copy only the compiled JAR file from the builder stage
-COPY --from=builder /app/build/libs/*.jar app.jar
+RUN addgroup -g ${USER_GID} ${USER_NAME} \
+    && adduser -h /opt/advshop -D -u ${USER_UID} -G ${USER_NAME} ${USER_NAME}
 
-# Expose the port your Spring Boot app runs on
+USER ${USER_NAME}
+WORKDIR /opt/advshop
+COPY --from=builder --chown=${USER_UID}:${USER_GID} /src/advshop/build/libs/*.jar app.jar
+
 EXPOSE 8080
 
-# Command to run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java"]
+CMD ["-jar", "app.jar"]
