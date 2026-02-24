@@ -20,3 +20,12 @@ While I strive for high code coverage to ensure every line of code is executed d
 2. Functional Testing Cleanliness
 Creating a new functional test class by copying the setup procedures and instance variables from the previous class violates the DRY (Don't Repeat Yourself) principle, leading to code duplication and maintenance issues. 
 To improve the code quality and cleanliness, I should refactor this common setup logic into a separate Base Test class or a utility method, allowing all functional tests to inherit the configuration without repeating the code.
+
+README for Module 2 - CI/CD & DevOps
+1. Code quality issue(s) that you fixed during the exercise
+A common code quality issue flagged by SonarCloud in this project was having unnecessary public modifiers on JUnit 5 test classes and methods. My strategy to fix this was to simply go through the test files (like HomeControllerTest and ProductControllerTest) 
+and remove the public keywords. JUnit 5 doesn't require test classes or methods to be public, so removing them makes the code cleaner and strictly follows SonarQube's best practices.
+
+2. CI/CD workflows (GitHub)
+Yes, I believe the current setup perfectly meets the definitions of both Continuous Integration (CI) and Continuous Deployment (CD). For the CI part, I created GitHub Actions that automatically trigger on every push to run the test suites and check code 
+quality via SonarCloud, ensuring that any new code is always tested and verified. For the CD part, I connected my main GitHub branch to Koyeb using a pull-based PaaS approach. This means that whenever code is successfully merged into the main branch, Koyeb automatically builds the Docker image and deploys the live application to the internet without any manual intervention.
