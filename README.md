@@ -29,3 +29,26 @@ and remove the public keywords. JUnit 5 doesn't require test classes or methods 
 2. CI/CD workflows (GitHub)
 Yes, I believe the current setup perfectly meets the definitions of both Continuous Integration (CI) and Continuous Deployment (CD). For the CI part, I created GitHub Actions that automatically trigger on every push to run the test suites and check code 
 quality via SonarCloud, ensuring that any new code is always tested and verified. For the CD part, I connected my main GitHub branch to Koyeb using a pull-based PaaS approach. This means that whenever code is successfully merged into the main branch, Koyeb automatically builds the Docker image and deploys the live application to the internet without any manual intervention.
+
+README for Module 3 - Maintainability & OO Principles
+1. I successfully applied all five SOLID principles to the project:
+
+SRP (Single Responsibility Principle): I separated CarController and ProductController into distinct files so each only handles routing for its specific entity.
+
+OCP (Open-Closed Principle): I updated the edit/update methods in the repositories to replace the entire object in the list, rather than hardcoding setter methods for each attribute.
+
+LSP (Liskov Substitution Principle): I removed the extends ProductController from CarController, as a car controller is not a valid logical substitute for a product controller.
+
+ISP (Interface Segregation Principle): I ensured interfaces like CarService and ProductRepository are small and strictly focused on essential CRUD operations.
+
+DIP (Dependency Inversion Principle): I replaced Field Injection (@Autowired on variables) with Constructor Injection, ensuring my high-level controllers depend on abstractions (interfaces) rather than concrete implementations.
+
+2. High Extensibility (OCP): If I add a new attribute like price to the Product model later, I don't have to touch the repository's edit logic at all because it already replaces the whole object.
+
+Easier Testing (DIP): By using Constructor Injection and interfaces, I can easily inject mock services when writing unit tests for my controllers without relying on Spring's framework injection.
+
+Better Maintainability (SRP): If a routing bug occurs in the Car feature, I know exactly to look in CarController rather than digging through a massive, combined file.
+
+3. Without SOLID principles, my project would suffer from tight coupling, routing issues, and high maintenance risks. For example, violating DIP by relying on a concrete CarRepositoryImpl would force a massive rewrite 
+if I ever switch to PostgreSQL. Violating LSP by making CarController extend ProductController causes Spring Boot endpoint collisions. Finally, ignoring OCP by manually updating attributes forces me to continuously modify 
+stable repository files whenever a model changes, increasing the risk of breaking existing code.
