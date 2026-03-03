@@ -7,6 +7,6 @@ public interface ProductService {
     public Product create(Product product);
     public List<Product> findAll();
     Product findById(String productId);
-    void update(Product product); // "edit" in repo, usually "update" in service
+    void update(String productId, Product product); // Method signature diperbarui
     void deleteProductById(String productId);
 }

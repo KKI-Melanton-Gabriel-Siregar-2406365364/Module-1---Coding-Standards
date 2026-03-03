@@ -35,7 +35,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void update(Product product) {
+    public void update(String productId, Product product) {
+        // Asumsi repository tetap memproses menggunakan object product
         productRepository.edit(product);
     }
 
