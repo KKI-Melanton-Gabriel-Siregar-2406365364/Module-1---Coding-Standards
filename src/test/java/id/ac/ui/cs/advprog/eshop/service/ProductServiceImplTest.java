@@ -67,7 +67,7 @@ class ProductServiceImplTest {
 
     @Test
     void testUpdate() {
-        productService.update(product);
+        productService.update(product.getProductId(), product);
         verify(productRepository, times(1)).edit(product);
     }
 

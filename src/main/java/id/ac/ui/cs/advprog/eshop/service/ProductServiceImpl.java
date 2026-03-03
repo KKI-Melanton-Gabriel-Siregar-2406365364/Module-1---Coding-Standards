@@ -12,8 +12,13 @@ import java.util.List;
 @Service
 public class ProductServiceImpl implements ProductService {
 
+    private final ProductRepository productRepository; // Jadikan final
+
+    // Gunakan Constructor Injection
     @Autowired
-    private ProductRepository productRepository;
+    public ProductServiceImpl(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     @Override
     public Product create(Product product) {
@@ -36,7 +41,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void update(String productId, Product product) {
-        // Asumsi repository tetap memproses menggunakan object product
         productRepository.edit(product);
     }
 
