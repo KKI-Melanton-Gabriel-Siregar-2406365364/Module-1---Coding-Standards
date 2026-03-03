@@ -27,7 +27,7 @@ class ProductControllerTest {
     void testCreateProductPage() throws Exception {
         mockMvc.perform(get("/product/create"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("CreateProduct"))
+                .andExpect(view().name("createProduct"))
                 .andExpect(model().attributeExists("product"));
     }
 
@@ -50,7 +50,7 @@ class ProductControllerTest {
 
         mockMvc.perform(get("/product/list"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("ProductList"))
+                .andExpect(view().name("productList"))
                 .andExpect(model().attributeExists("products"));
     }
 
@@ -61,7 +61,7 @@ class ProductControllerTest {
 
         mockMvc.perform(get("/product/edit/123"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("EditProduct"))
+                .andExpect(view().name("editProduct"))
                 .andExpect(model().attributeExists("product"));
     }
 
@@ -72,14 +72,16 @@ class ProductControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("list"));
 
-        verify(productService, times(1)).update(any(Product.class));
+        // Menyesuaikan dengan parameter baru (String productId, Product product)
+        verify(productService, times(1)).update(any(), any(Product.class));
     }
 
     @Test
     void testDeleteProduct() throws Exception {
-        mockMvc.perform(get("/product/delete/123"))
+        // Menyesuaikan dengan POST request dan request parameter, serta URL redirect yang baru
+        mockMvc.perform(post("/product/delete").param("productId", "123"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("../list"));
+                .andExpect(redirectedUrl("list"));
 
         verify(productService, times(1)).deleteProductById("123");
     }
