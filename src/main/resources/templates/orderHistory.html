@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Order History</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+  <h2>Search Order History</h2>
+  <form th:action="@{/order/history}" method="post" class="mb-4">
+    <div class="form-group">
+      <label for="author">Author Name</label>
+      <input type="text" class="form-control" id="author" name="author" required placeholder="Enter your name to search">
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+    <a th:href="@{/order/create}" class="btn btn-success">Create New Order</a>
+  </form>
+
+  <div th:if="${orders != null}">
+    <h3>Your Orders</h3>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="order : ${orders}">
+        <td th:text="${order.id}"></td>
+        <td th:text="${order.status}"></td>
+        <td>
+          <a th:if="${order.status == 'WAITING_PAYMENT'}" th:href="@{/order/pay/{id}(id=${order.id})}" class="btn btn-sm btn-warning">Pay Now</a>
+        </td>
+      </tr>
+      <tr th:if="${orders.empty}">
+        <td colspan="3" class="text-center">No orders found for this author.</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>
