@@ -1,7 +1,10 @@
 package id.ac.ui.cs.advprog.eshop.controller;
 
 import id.ac.ui.cs.advprog.eshop.model.Order;
+import id.ac.ui.cs.advprog.eshop.model.Payment;
+import id.ac.ui.cs.advprog.eshop.model.Product;
 import id.ac.ui.cs.advprog.eshop.service.OrderService;
+import id.ac.ui.cs.advprog.eshop.service.PaymentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +13,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -28,11 +33,21 @@ class OrderControllerTest {
     @MockBean
     private OrderService orderService;
 
+    @MockBean
+    private PaymentService paymentService;
+
     private Order order;
 
     @BeforeEach
     void setUp() {
-        order = new Order("13652556-012a-4c07-b546-54eb1396d79b", new ArrayList<>(), 1708560000L, "Safira Sudrajat");
+        List<Product> products = new ArrayList<>();
+        Product product = new Product();
+        product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        product.setProductName("Sampo Cap Bambang");
+        product.setProductQuantity(2);
+        products.add(product);
+
+        order = new Order("13652556-012a-4c07-b546-54eb1396d79b", products, 1708560000L, "Safira Sudrajat");
     }
 
     @Test
@@ -84,6 +99,15 @@ class OrderControllerTest {
 
     @Test
     void testPayOrderPost() throws Exception {
+        when(orderService.findById(anyString())).thenReturn(order);
+
+        Map<String, String> paymentData = new HashMap<>();
+        paymentData.put("voucherCode", "ESHOP1234ABC5678");
+        Payment payment = new Payment("1", "VOUCHER", paymentData, order);
+
+        when(paymentService.addPayment(any(Order.class), anyString(), any())).thenReturn(payment);
+        when(paymentService.setStatus(any(Payment.class), anyString())).thenReturn(payment);
+
         mockMvc.perform(post("/order/pay/13652556-012a-4c07-b546-54eb1396d79b"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("paymentId"))
