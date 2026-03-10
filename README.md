@@ -52,3 +52,15 @@ Better Maintainability (SRP): If a routing bug occurs in the Car feature, I know
 3. Without SOLID principles, my project would suffer from tight coupling, routing issues, and high maintenance risks. For example, violating DIP by relying on a concrete CarRepositoryImpl would force a massive rewrite 
 if I ever switch to PostgreSQL. Violating LSP by making CarController extend ProductController causes Spring Boot endpoint collisions. Finally, ignoring OCP by manually updating attributes forces me to continuously modify 
 stable repository files whenever a model changes, increasing the risk of breaking existing code.
+
+README for Module 4 - Refactoring and TDD
+Reflection 1
+1. The TDD flow has been highly useful for my development process because it forces me to think critically about the requirements and edge cases before writing the actual implementation. By writing tests first, I ensure that my 
+code is designed to be testable from the start, catching potential bugs early and giving me confidence during refactoring. To improve, I plan to focus more on anticipating complex negative test cases earlier in the RED phase to make 
+the TDD cycle even more effective and comprehensive.
+
+2. My unit tests currently follow the F.I.R.S.T. principles fairly well, as they are Fast to execute, Independent from one another, Repeatable across environments, Self-validating with clear assertions, and Timely since they were 
+written before the production code. However, I noticed that some tests share repetitive setup logic that could be further optimized. Next time, I need to improve the code cleanliness by completely isolating the mock behaviors and extracting 
+duplicate setups into base utility methods to keep the test classes more maintainable.
+
+Reflection 2
