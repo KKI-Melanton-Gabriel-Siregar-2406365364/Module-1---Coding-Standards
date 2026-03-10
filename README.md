@@ -64,3 +64,16 @@ written before the production code. However, I noticed that some tests share rep
 duplicate setups into base utility methods to keep the test classes more maintainable.
 
 Reflection 2
+**Reflection 2 (Bonus - Code Review & Refactoring)**
+
+1. Overall, my friend's code was well-structured and followed the correct logical flow for the newly implemented features. However, it lacked proper edge-case handling in the controller and missed a crucial test configuration, 
+which unfortunately caused the application and tests to crash.
+
+2. To contribute to my friend's code, I started by thoroughly reviewing their Pull Request and pinpointing the exact lines causing the failures. I then checked out a new branch (`refactor/2406365364`) from their repository, applied the 
+necessary fixes to make the application run smoothly, and submitted a Pull Request back to their branch.
+
+3. During the review, I found a few code smells and bugs. The most critical was a logic error in `OrderController` where an empty list was passed to the `Order` constructor, triggering an `IllegalArgumentException`. I also found an inefficient 
+list modification smell in `OrderRepository` and a missing `@MockBean` setup in the test class that caused an `UnsatisfiedDependencyException`.
+
+4. For the refactoring steps, I added a dummy product list in `OrderController` to successfully bypass the validation check. I also optimized the `save()` method in `OrderRepository` by replacing the inefficient `remove()` and `add()` 
+combination with a standard `for` loop and the `.set()` method. Finally, I injected the missing `PaymentService` mock in the test class to ensure all tests passed and turned green.
